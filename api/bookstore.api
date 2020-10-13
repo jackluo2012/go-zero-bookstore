@@ -1,0 +1,47 @@
+info(
+	title:  学习 // TODO: add title
+	desc: 书店tmeb// TODO: add description
+	author: jackluo
+	email: net.webjoy@gmail.com
+)
+
+// 实现两功能
+// 1.是添加 书籍
+// 2.查询价格功能
+type (
+
+	//添加请求的 数据结构
+	addReq struct {
+		book  string `form:"book"`
+		price int64  `form:"price"`
+	}
+
+	addResp struct {
+		ok bool `json:"ok"`
+	}
+)
+
+type (
+	checkReq struct {
+		book string `form:"book"`
+	}
+
+	checkResp struct {
+		found bool  `json:"found"`
+		price int64 `json:"price"`
+	}
+)
+
+service bookstore-api {
+	@server(
+        handler: AddHandler
+    )
+    get /add(addReq) returns(addResp)
+
+	@server(
+        handler: CheckHandler
+    )
+    get /check(checkReq) returns(checkResp)
+
+}
+

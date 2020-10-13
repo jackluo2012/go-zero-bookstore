@@ -1,0 +1,34 @@
+type JwtTokenRequest struct {
+}
+
+type JwtTokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+	RefreshAfter int64  `json:"refresh_after"` // 建议客户端刷新token的绝对时间
+}
+
+type GetUserRequest struct {
+	UserId string `json:"userId"`
+}
+
+type GetUserResponse struct {
+	Name string `json:"name"`
+}
+
+service jwt-api {
+  @server(
+    handler: JwtHandler
+  )
+  post /user/token(JwtTokenRequest) returns (JwtTokenResponse)
+}
+
+@server(
+  jwt: JwtAuth
+)
+service jwt-api {
+  @server(
+    handler: GetUserHandler
+  )
+  post /user/info(GetUserRequest) returns (GetUserResponse)
+}
+

@@ -1,0 +1,96 @@
+info(
+    title: doc title
+    desc: >
+    doc description first part,
+    doc description second part<
+    version: 1.0
+)
+
+type int userType
+
+type user struct {
+	name string `json:"name"` // 用户姓名
+}
+
+type student struct {
+	name string `json:"name"` // 学生姓名
+}
+
+type teacher struct {
+}
+
+type (
+	address struct {
+		city string `json:"city"`
+	}
+
+	innerType struct {
+		image string `json:"image"`
+	}
+
+	createRequest struct {
+		innerType
+		name    string    `form:"name"`
+		age     int       `form:"age,optional"`
+		address []address `json:"address,optional"`
+	}
+
+	getRequest struct {
+		name string `path:"name"`
+		age  int    `form:"age,optional"`
+	}
+
+	getResponse struct {
+		code    int     `json:"code"`
+		desc    string  `json:"desc,omitempty"`
+		address address `json:"address"`
+		service int     `json:"service"`
+	}
+)
+
+service user-api {
+    @doc(
+        summary: user title
+        desc: >
+        user description first part,
+        user description second part,
+        user description second line
+    )
+    @server(
+        handler: GetUserHandler
+        group: user
+    )
+    get /api/user/:name(getRequest) returns(getResponse)
+
+    @server(
+        handler: CreateUserHandler
+        group: user
+    )
+    post /api/users/create(createRequest)
+}
+
+@server(
+    jwt: Auth
+    group: profile
+)
+service user-api {
+    @doc(summary: user title)
+    @server(
+        handler: GetProfileHandler
+    )
+    get /api/profile/:name(getRequest) returns(getResponse)
+
+    @server(
+        handler: CreateProfileHandler
+    )
+    post /api/profile/create(createRequest)
+}
+
+service user-api {
+    @doc(summary: desc in one line)
+    @server(
+        handler: PingHandler
+    )
+    head /api/ping()
+}
+
